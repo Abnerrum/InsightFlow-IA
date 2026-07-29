@@ -6,6 +6,8 @@ from sqlalchemy.orm import Session
 from app.database import get_db
 from app.models import ConversaIA, Departamento, Registro
 from app.schemas import PerguntaIA
+from app.security import encrypt_text
+from app.services.audit_service import registrar_auditoria
 from app.services.openai_service import gerar_analise
 
 router = APIRouter(prefix="/assistente", tags=["Assistente IA"])
@@ -36,11 +38,24 @@ def pagina_assistente(request: Request):
 
 
 @router.post("/perguntar")
-def perguntar(entrada: PerguntaIA, db: Session = Depends(get_db)):
+def perguntar(
+    entrada: PerguntaIA,
+    request: Request,
+    db: Session = Depends(get_db),
+):
     try:
         resposta = gerar_analise(entrada.pergunta, resumo_dados(db))
+        db.add(
+            ConversaIA(
+                pergunta=encrypt_text(entrada.pergunta),
+                resposta=encrypt_text(resposta),
+                criptografado=True,
+            )
+        )
+        registrar_auditoria(db, request, "consultar_ia", "conversa_ia")
+        db.commit()
     except RuntimeError as erro:
+        db.rollback()
         raise HTTPException(status_code=503, detail=str(erro)) from erro
-    db.add(ConversaIA(pergunta=entrada.pergunta, resposta=resposta))
-    db.commit()
+
     return {"pergunta": entrada.pergunta, "resposta": resposta}
