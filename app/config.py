@@ -20,6 +20,7 @@ class Settings(BaseSettings):
     audit_hmac_secret: str = "troque-esta-chave-em-producao"
     allowed_origins: str = "http://127.0.0.1:8000,http://localhost:8000"
     rate_limit_per_minute: int = 60
+    max_upload_mb: int = 10
     conversation_retention_days: int = 90
     report_retention_days: int = 365
     privacy_contact_email: str = "privacidade@exemplo.com"
