@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block conteudo %}
+<h1 class="mb-4">Dashboard</h1>
+<div class="row g-3 mb-4">
+  <div class="col-md-3"><div class="card card-kpi"><div class="card-body"><small>Total</small><h2>{{ total }}</h2></div></div></div>
+  <div class="col-md-3"><div class="card card-kpi"><div class="card-body"><small>Concluídos</small><h2>{{ concluidos }}</h2></div></div></div>
+  <div class="col-md-3"><div class="card card-kpi"><div class="card-body"><small>Atrasados</small><h2>{{ atrasados }}</h2></div></div></div>
+  <div class="col-md-3"><div class="card card-kpi"><div class="card-body"><small>Valor total</small><h2>R$ {{ "%.2f"|format(valor_total) }}</h2></div></div></div>
+</div>
+<div class="card shadow-sm"><div class="card-body">
+<h2 class="h5">Indicadores por departamento</h2>
+<table class="table"><thead><tr><th>Departamento</th><th>Total</th><th>Atrasados</th></tr></thead><tbody>
+{% for item in por_departamento %}<tr><td>{{ item.nome }}</td><td>{{ item.total }}</td><td>{{ item.atrasados or 0 }}</td></tr>
+{% else %}<tr><td colspan="3">Importe uma planilha para visualizar os indicadores.</td></tr>{% endfor %}
+</tbody></table>
+</div></div>
+{% endblock %}
