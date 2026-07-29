@@ -1,12 +1,5 @@
 {% extends "base.html" %}
 {% block conteudo %}
-<section class="p-5 rounded-4 hero shadow-sm">
-  <span class="badge text-bg-success mb-3">Projeto Integrador 2026-2</span>
-  <h1 class="display-5 fw-bold">Transforme planilhas em decisões inteligentes.</h1>
-  <p class="lead">Python, MySQL, análise de dados, ChatGPT e exportação para Obsidian em um único sistema.</p>
-  <div class="d-flex gap-2">
-    <a class="btn btn-primary btn-lg" href="/importacoes">Importar dados</a>
-    <a class="btn btn-outline-primary btn-lg" href="/assistente">Abrir assistente</a>
-  </div>
-</section>
+<section class="panel hero p-4 p-md-5 mb-4"><div class="row align-items-center g-4"><div class="col-lg-7"><span class="badge text-bg-primary mb-3"><i class="bi bi-stars me-1"></i>Projeto Integrador com IA</span><h2 class="display-5 fw-bold">Transforme planilhas em decisões inteligentes.</h2><p class="lead text-secondary">Importe dados, acompanhe indicadores, converse com o ChatGPT e gere relatórios para o Obsidian.</p><div class="d-flex flex-wrap gap-2"><a class="btn btn-primary btn-lg" href="/importacoes"><i class="bi bi-cloud-arrow-up me-1"></i>Importar dados</a><a class="btn btn-outline-primary btn-lg" href="/assistente"><i class="bi bi-robot me-1"></i>Abrir assistente</a></div></div><div class="col-lg-5"><div class="panel p-4"><div class="d-flex align-items-center gap-3 mb-3"><div class="kpi-icon bg-soft-primary"><i class="bi bi-diagram-3-fill"></i></div><div><strong>Fluxo automatizado</strong><div class="small text-secondary">Excel → MySQL → IA → Obsidian</div></div></div><div class="progress" style="height:10px"><div class="progress-bar" style="width:75%"></div></div><div class="d-flex justify-content-between mt-2 small text-secondary"><span>MVP em desenvolvimento</span><strong>75%</strong></div></div></div></div></section>
+<div class="row g-3">{% for icon, titulo, texto in [('bi-file-earmark-spreadsheet','Importação inteligente','Validação e tratamento de Excel e CSV com Pandas.'),('bi-bar-chart-line','Business Intelligence','Indicadores e gráficos para apoiar decisões.'),('bi-robot','ChatGPT integrado','Perguntas e relatórios com base nos dados do sistema.'),('bi-journal-richtext','Obsidian','Base de conhecimento em arquivos Markdown conectados.')] %}<div class="col-md-6 col-xl-3"><div class="panel p-4 h-100"><div class="kpi-icon bg-soft-primary mb-3"><i class="bi {{ icon }}"></i></div><h3 class="h6 fw-bold">{{ titulo }}</h3><p class="small text-secondary mb-0">{{ texto }}</p></div></div>{% endfor %}</div>
 {% endblock %}
