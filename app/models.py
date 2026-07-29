@@ -1,7 +1,7 @@
 from datetime import date, datetime
 from decimal import Decimal
 
-from sqlalchemy import Date, DateTime, ForeignKey, Numeric, String, Text, func
+from sqlalchemy import Boolean, Date, DateTime, ForeignKey, Numeric, String, Text, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database import Base
@@ -36,6 +36,7 @@ class ConversaIA(Base):
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     pergunta: Mapped[str] = mapped_column(Text, nullable=False)
     resposta: Mapped[str] = mapped_column(Text, nullable=False)
+    criptografado: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
     criado_em: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
 
 
@@ -45,4 +46,28 @@ class Relatorio(Base):
     titulo: Mapped[str] = mapped_column(String(200), nullable=False)
     conteudo: Mapped[str] = mapped_column(Text, nullable=False)
     arquivo_markdown: Mapped[str | None] = mapped_column(String(500))
+    criptografado: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
     criado_em: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
+
+
+class Auditoria(Base):
+    __tablename__ = "auditoria"
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    request_id: Mapped[str] = mapped_column(String(128), index=True, nullable=False)
+    ator_hash: Mapped[str] = mapped_column(String(64), index=True, nullable=False)
+    acao: Mapped[str] = mapped_column(String(100), nullable=False)
+    recurso: Mapped[str] = mapped_column(String(200), nullable=False)
+    resultado: Mapped[str] = mapped_column(String(30), nullable=False)
+    detalhes: Mapped[str | None] = mapped_column(Text)
+    criado_em: Mapped[datetime] = mapped_column(DateTime, server_default=func.now(), index=True)
+
+
+class SolicitacaoTitular(Base):
+    __tablename__ = "solicitacoes_titular"
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    protocolo: Mapped[str] = mapped_column(String(40), unique=True, index=True, nullable=False)
+    titular_hash: Mapped[str] = mapped_column(String(64), index=True, nullable=False)
+    tipo: Mapped[str] = mapped_column(String(40), nullable=False)
+    descricao: Mapped[str] = mapped_column(Text, nullable=False)
+    status: Mapped[str] = mapped_column(String(30), default="Recebida", nullable=False)
+    criado_em: Mapped[datetime] = mapped_column(DateTime, server_default=func.now(), index=True)
