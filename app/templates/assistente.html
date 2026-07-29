@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block conteudo %}
+<h1>Assistente ChatGPT</h1>
+<p>Faça perguntas sobre os indicadores armazenados no MySQL.</p>
+<div class="card shadow-sm"><div class="card-body">
+<textarea id="pergunta" class="form-control" rows="4" placeholder="Ex.: qual departamento possui mais atrasos?"></textarea>
+<button id="enviar" class="btn btn-primary mt-3">Perguntar à IA</button>
+<button id="exportar" class="btn btn-outline-secondary mt-3" disabled>Exportar para Obsidian</button>
+<div id="status" class="mt-3"></div>
+<pre id="resposta" class="resposta-ia d-none"></pre>
+</div></div>
+<script src="/static/js/assistente.js"></script>
+{% endblock %}
