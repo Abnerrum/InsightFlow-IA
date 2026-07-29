@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block conteudo %}
+<h1>Importar planilha</h1>
+<p>Envie um arquivo CSV ou Excel usando o modelo disponível no projeto.</p>
+{% if mensagem %}<div class="alert alert-success">{{ mensagem }}</div>{% endif %}
+<form method="post" enctype="multipart/form-data" class="card p-4 shadow-sm">
+  <input class="form-control mb-3" type="file" name="arquivo" accept=".csv,.xlsx,.xls" required>
+  <button class="btn btn-primary">Importar dados</button>
+</form>
+{% endblock %}
