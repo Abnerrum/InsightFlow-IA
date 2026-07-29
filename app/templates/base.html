@@ -1,26 +1,45 @@
 <!doctype html>
-<html lang="pt-BR">
+<html lang="pt-BR" data-bs-theme="light">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{{ titulo or "InsightFlow IA" }}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
   <link href="/static/css/style.css" rel="stylesheet">
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-  <div class="container">
-    <a class="navbar-brand fw-bold" href="/">InsightFlow IA</a>
-    <div class="navbar-nav">
-      <a class="nav-link" href="/dashboard">Dashboard</a>
-      <a class="nav-link" href="/importacoes">Importar</a>
-      <a class="nav-link" href="/assistente">ChatGPT</a>
-      <a class="nav-link" href="/docs">API</a>
-    </div>
+<div class="app-shell">
+  <aside class="sidebar" id="sidebar">
+    <a class="brand" href="/"><span class="brand-icon"><i class="bi bi-stars"></i></span><span><strong>InsightFlow</strong><small>Inteligência empresarial</small></span></a>
+    <nav class="sidebar-nav">
+      <span class="nav-section">VISÃO GERAL</span>
+      <a class="sidebar-link" href="/dashboard"><i class="bi bi-grid-1x2-fill"></i><span>Dashboard</span></a>
+      <a class="sidebar-link" href="/importacoes"><i class="bi bi-cloud-arrow-up-fill"></i><span>Importar dados</span></a>
+      <a class="sidebar-link" href="/assistente"><i class="bi bi-robot"></i><span>Assistente IA</span></a>
+      <a class="sidebar-link" href="/relatorios"><i class="bi bi-file-earmark-bar-graph-fill"></i><span>Relatórios</span></a>
+      <span class="nav-section mt-4">SISTEMA</span>
+      <a class="sidebar-link" href="/docs" target="_blank"><i class="bi bi-braces-asterisk"></i><span>Documentação API</span></a>
+      <a class="sidebar-link" href="/saude"><i class="bi bi-activity"></i><span>Status da aplicação</span></a>
+    </nav>
+    <div class="sidebar-footer"><div class="user-card"><div class="avatar">AL</div><div><strong>Abner Luiz</strong><small>Administrador</small></div></div></div>
+  </aside>
+  <div class="main-wrapper">
+    <header class="topbar">
+      <button class="icon-button d-lg-none" id="sidebarToggle" aria-label="Abrir menu"><i class="bi bi-list"></i></button>
+      <div><h1 class="page-title">{{ page_title or "InsightFlow IA" }}</h1><p class="page-subtitle mb-0">{{ page_subtitle or "Dados claros, decisões melhores." }}</p></div>
+      <div class="topbar-actions"><button class="icon-button" id="themeToggle" aria-label="Alternar tema"><i class="bi bi-moon-stars"></i></button><button class="icon-button position-relative" aria-label="Notificações"><i class="bi bi-bell"></i><span class="notification-dot"></span></button></div>
+    </header>
+    <main class="content-area">{% block conteudo %}{% endblock %}</main>
   </div>
-</nav>
-<main class="container py-4">
-  {% block conteudo %}{% endblock %}
-</main>
+</div>
+<div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="/static/js/app.js"></script>
+{% block scripts %}{% endblock %}
 </body>
 </html>
