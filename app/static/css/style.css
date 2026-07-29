@@ -1,0 +1,13 @@
+body { background: #f5f7fb; }
+.hero { background: linear-gradient(135deg, #ffffff, #eaf2ff); }
+.card-kpi { border: 0; box-shadow: 0 .25rem 1rem rgba(0,0,0,.08); }
+.card-kpi h2 { margin: .4rem 0 0; }
+.resposta-ia {
+  white-space: pre-wrap;
+  background: #101827;
+  color: #e8eef9;
+  padding: 1rem;
+  border-radius: .75rem;
+  margin-top: 1rem;
+  min-height: 140px;
+}
