@@ -1,0 +1,4 @@
+departamento,responsavel,descricao,status,prioridade,data_abertura,prazo,data_conclusao,valor
+Suporte,Ana,Validar chamado do cliente,Atrasado,Alta,2026-07-01,2026-07-03,,800.00
+Financeiro,Carlos,Conferir pagamento,Concluído,Média,2026-07-01,2026-07-04,2026-07-03,2500.00
+Comercial,Lucas,Preparar proposta,Em andamento,Alta,2026-07-02,2026-07-08,,4000.00
