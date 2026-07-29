@@ -1,10 +1,5 @@
 {% extends "base.html" %}
 {% block conteudo %}
-<h1>Importar planilha</h1>
-<p>Envie um arquivo CSV ou Excel usando o modelo disponível no projeto.</p>
-{% if mensagem %}<div class="alert alert-success">{{ mensagem }}</div>{% endif %}
-<form method="post" enctype="multipart/form-data" class="card p-4 shadow-sm">
-  <input class="form-control mb-3" type="file" name="arquivo" accept=".csv,.xlsx,.xls" required>
-  <button class="btn btn-primary">Importar dados</button>
-</form>
+<div class="row g-4"><div class="col-xl-8"><div class="panel p-4"><div class="d-flex justify-content-between mb-4"><div><h2 class="section-title">Importar nova base</h2><p class="text-secondary small">CSV, XLS ou XLSX.</p></div><a class="btn btn-outline-primary btn-sm" href="/static/modelo_importacao.csv" download><i class="bi bi-download me-1"></i>Baixar modelo</a></div>{% if mensagem %}<div class="alert alert-success">{{ mensagem }}</div>{% endif %}<form method="post" enctype="multipart/form-data"><input type="file" name="arquivo" id="arquivo" accept=".csv,.xlsx,.xls" required hidden><label for="arquivo" class="dropzone w-100" id="dropzone"><i class="bi bi-cloud-arrow-up-fill dropzone-icon"></i><h3 class="h5 mt-3">Arraste sua planilha aqui</h3><p class="text-secondary">ou clique para selecionar</p></label><div id="fileInfo" class="d-none mt-3 panel p-3"><strong id="fileName"></strong><div class="small text-secondary" id="fileSize"></div><div class="progress mt-3"><div class="progress-bar" id="progressBar" style="width:0%"></div></div></div><button class="btn btn-primary w-100 mt-3" id="submitButton" disabled><i class="bi bi-database-add me-1"></i>Validar e importar</button></form></div><div class="panel p-4 mt-4 d-none" id="previewPanel"><div class="d-flex justify-content-between"><h2 class="section-title">Pré-visualização</h2><span class="badge text-bg-primary" id="rowCount"></span></div><div class="preview-table table-responsive"><table class="table table-sm" id="previewTable"></table></div></div></div><div class="col-xl-4"><div class="panel p-4"><h2 class="section-title">Colunas obrigatórias</h2><div class="d-flex flex-wrap gap-2 mt-3">{% for coluna in ['departamento','responsavel','descricao','status','prioridade','data_abertura','prazo','data_conclusao','valor'] %}<span class="badge text-bg-light border">{{ coluna }}</span>{% endfor %}</div></div></div></div>
 {% endblock %}
+{% block scripts %}<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script><script src="/static/js/importacao.js"></script>{% endblock %}
