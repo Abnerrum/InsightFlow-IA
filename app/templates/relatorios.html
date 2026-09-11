@@ -1,5 +1,47 @@
 {% extends "base.html" %}
+{% block styles %}<style>
+:root{--surface:#fff;--surface-muted:#f6f7fb;--border:#e7e9f2;--text-soft:#6b7280}
+[data-bs-theme="dark"]{--surface:#111827;--surface-muted:#0b1220;--border:#253047;--text-soft:#9ca3af}
+.report-preview{display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden;white-space:pre-line;line-height:1.55;min-height:6.2em}
+.report-format{background:rgba(34,197,94,.12);color:#15803d;border:1px solid rgba(34,197,94,.2)}
+.kpi-date{font-size:1.35rem}.report-modal-meta{color:var(--text-soft);font-size:.82rem;margin-bottom:18px}
+.report-modal-content{text-align:left;white-space:pre-wrap;max-height:55vh;overflow:auto;padding:20px;border:1px solid var(--border);border-radius:12px;background:var(--surface-muted);line-height:1.65;font-size:.9rem}
+</style>{% endblock %}
 {% block conteudo %}
-<div class="d-flex flex-wrap justify-content-between gap-3 align-items-center mb-4"><div><h2 class="h4 fw-bold mb-1">Relatórios gerados</h2><p class="text-secondary mb-0">Histórico de análises exportadas para o Obsidian.</p></div><a href="/assistente" class="btn btn-primary"><i class="bi bi-stars me-1"></i>Gerar novo relatório</a></div><div class="row g-4">{% for relatorio in relatorios %}<div class="col-md-6 col-xl-4"><article class="panel report-card p-4 h-100"><div class="d-flex justify-content-between"><div class="kpi-icon bg-soft-primary"><i class="bi bi-file-earmark-text-fill"></i></div><span class="badge text-bg-success">Markdown</span></div><h3 class="h6 fw-bold mt-4">{{ relatorio.titulo }}</h3><p class="small text-secondary text-truncate">{{ relatorio.conteudo }}</p><div class="small text-secondary"><i class="bi bi-calendar3 me-1"></i>{{ relatorio.criado_em.strftime('%d/%m/%Y %H:%M') }}</div><hr><button class="btn btn-sm btn-outline-primary w-100" onclick='visualizarRelatorio({{ relatorio.titulo|tojson }},{{ relatorio.conteudo|tojson }})'><i class="bi bi-eye me-1"></i>Visualizar</button></article></div>{% else %}<div class="col-12"><div class="panel p-5 text-center"><div class="kpi-icon bg-soft-primary mx-auto mb-3"><i class="bi bi-file-earmark-plus"></i></div><h3 class="h5">Nenhum relatório criado</h3><p class="text-secondary">Converse com o Assistente IA e exporte uma análise.</p><a href="/assistente" class="btn btn-primary">Abrir assistente</a></div></div>{% endfor %}</div>
+<div class="d-flex flex-wrap justify-content-between gap-3 align-items-center mb-4">
+  <div><h2 class="h4 fw-bold mb-1">Relatórios gerados</h2><p class="text-secondary mb-0">Pesquise, visualize e baixe suas análises.</p></div>
+  <div class="d-flex gap-2"><a href="/relatorios/exportar-csv?q={{ filtros.q|urlencode }}&periodo={{ filtros.periodo }}" class="btn btn-outline-primary"><i class="bi bi-filetype-csv me-1"></i>Exportar lista</a><a href="/assistente" class="btn btn-primary"><i class="bi bi-stars me-1"></i>Novo relatório</a></div>
+</div>
+<div class="row g-3 mb-4">
+  <div class="col-6 col-xl-3"><div class="panel kpi-card"><div class="kpi-label">TOTAL DE RELATÓRIOS</div><div class="kpi-value">{{ metricas.total }}</div></div></div>
+  <div class="col-6 col-xl-3"><div class="panel kpi-card"><div class="kpi-label">CRIADOS ESTE MÊS</div><div class="kpi-value">{{ metricas.no_mes }}</div></div></div>
+  <div class="col-6 col-xl-3"><div class="panel kpi-card"><div class="kpi-label">RESULTADOS VISÍVEIS</div><div class="kpi-value">{{ metricas.filtrados }}</div></div></div>
+  <div class="col-6 col-xl-3"><div class="panel kpi-card"><div class="kpi-label">ÚLTIMA ATUALIZAÇÃO</div><div class="kpi-value kpi-date">{{ metricas.ultimo.strftime('%d/%m') if metricas.ultimo else '—' }}</div><div class="kpi-trend">{{ metricas.ultimo.strftime('%H:%M') if metricas.ultimo else 'Nenhum relatório' }}</div></div></div>
+</div>
+<form class="panel filter-bar mb-4" method="get" action="/relatorios">
+  <div class="row g-3 align-items-end">
+    <div class="col-12 col-lg-6"><label class="form-label small fw-bold" for="busca">Pesquisar</label><input id="busca" name="q" value="{{ filtros.q }}" class="form-control" placeholder="Busque pelo título ou conteúdo"></div>
+    <div class="col-6 col-lg-2"><label class="form-label small fw-bold" for="periodo">Período</label><select id="periodo" class="form-select" name="periodo"><option value="todos" {{ 'selected' if filtros.periodo == 'todos' }}>Todo o período</option><option value="7" {{ 'selected' if filtros.periodo == '7' }}>Últimos 7 dias</option><option value="30" {{ 'selected' if filtros.periodo == '30' }}>Últimos 30 dias</option><option value="90" {{ 'selected' if filtros.periodo == '90' }}>Últimos 90 dias</option></select></div>
+    <div class="col-6 col-lg-2"><label class="form-label small fw-bold" for="ordenar">Ordenar</label><select id="ordenar" class="form-select" name="ordenar"><option value="recentes" {{ 'selected' if filtros.ordenar == 'recentes' }}>Mais recentes</option><option value="antigos" {{ 'selected' if filtros.ordenar == 'antigos' }}>Mais antigos</option><option value="titulo" {{ 'selected' if filtros.ordenar == 'titulo' }}>Título (A–Z)</option></select></div>
+    <div class="col-12 col-lg-2 d-grid"><button class="btn btn-primary" type="submit"><i class="bi bi-funnel-fill me-1"></i>Filtrar</button></div>
+  </div>
+  {% if filtros.q or filtros.periodo != 'todos' %}<a href="/relatorios" class="small text-decoration-none d-inline-block mt-3"><i class="bi bi-x-circle me-1"></i>Limpar filtros</a>{% endif %}
+</form>
+<div class="row g-4">
+{% for relatorio in relatorios %}
+  <div class="col-md-6 col-xl-4"><article class="panel report-card p-4 h-100 d-flex flex-column">
+    <div class="d-flex justify-content-between"><div class="kpi-icon bg-soft-primary"><i class="bi bi-file-earmark-text-fill"></i></div><span class="badge report-format">Protegido</span></div>
+    <h3 class="h6 fw-bold mt-4">{{ relatorio.titulo }}</h3><p class="small text-secondary report-preview flex-grow-1">{{ relatorio.conteudo }}</p>
+    <div class="small text-secondary mb-3"><i class="bi bi-calendar3 me-1"></i>{{ relatorio.criado_em.strftime('%d/%m/%Y às %H:%M') }}</div>
+    <div class="d-flex gap-2"><button class="btn btn-sm btn-primary flex-grow-1" type="button" onclick='visualizarRelatorio({{ relatorio.id }}, {{ relatorio.titulo|tojson }}, {{ relatorio.conteudo|tojson }}, {{ relatorio.criado_em.strftime("%d/%m/%Y às %H:%M")|tojson }})'><i class="bi bi-eye me-1"></i>Visualizar</button><div class="dropdown"><button class="btn btn-sm btn-outline-primary dropdown-toggle" data-bs-toggle="dropdown"><i class="bi bi-download"></i></button><ul class="dropdown-menu dropdown-menu-end"><li><a class="dropdown-item" href="/relatorios/{{ relatorio.id }}/download?formato=md">Baixar Markdown</a></li><li><a class="dropdown-item" href="/relatorios/{{ relatorio.id }}/download?formato=txt">Baixar texto</a></li></ul></div></div>
+  </article></div>
+{% else %}
+  <div class="col-12"><div class="panel p-5 text-center"><h3 class="h5">Nenhum relatório encontrado</h3><p class="text-secondary">Tente limpar os filtros ou gere uma nova análise.</p><a href="/relatorios" class="btn btn-outline-primary me-2">Limpar filtros</a><a href="/assistente" class="btn btn-primary">Abrir assistente</a></div></div>
+{% endfor %}
+</div>
+{% if paginacao.total > 1 %}<nav class="mt-4"><ul class="pagination justify-content-center"><li class="page-item {{ 'disabled' if paginacao.atual == 1 }}"><a class="page-link" href="?q={{ filtros.q|urlencode }}&periodo={{ filtros.periodo }}&ordenar={{ filtros.ordenar }}&pagina={{ paginacao.atual - 1 }}">Anterior</a></li>{% for numero in range(1, paginacao.total + 1) %}<li class="page-item {{ 'active' if numero == paginacao.atual }}"><a class="page-link" href="?q={{ filtros.q|urlencode }}&periodo={{ filtros.periodo }}&ordenar={{ filtros.ordenar }}&pagina={{ numero }}">{{ numero }}</a></li>{% endfor %}<li class="page-item {{ 'disabled' if paginacao.atual == paginacao.total }}"><a class="page-link" href="?q={{ filtros.q|urlencode }}&periodo={{ filtros.periodo }}&ordenar={{ filtros.ordenar }}&pagina={{ paginacao.atual + 1 }}">Próxima</a></li></ul></nav>{% endif %}
 {% endblock %}
-{% block scripts %}<script>function visualizarRelatorio(titulo,conteudo){const seguro=conteudo.replace(/[&<>]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]));Swal.fire({title:titulo,html:`<pre class="text-start" style="white-space:pre-wrap;max-height:55vh;overflow:auto">${seguro}</pre>`,width:850})}</script>{% endblock %}
+{% block scripts %}<script>
+function escaparHtml(texto){const elemento=document.createElement('div');elemento.textContent=texto;return elemento.innerHTML}
+function visualizarRelatorio(id,titulo,conteudo,criadoEm){Swal.fire({title:escaparHtml(titulo),html:`<div class="report-modal-meta"><i class="bi bi-calendar3"></i> ${escaparHtml(criadoEm)}</div><div class="report-modal-content">${escaparHtml(conteudo)}</div>`,width:900,showCancelButton:true,confirmButtonText:'Baixar Markdown',cancelButtonText:'Fechar'}).then(resultado=>{if(resultado.isConfirmed)window.location.href=`/relatorios/${id}/download?formato=md`})}
+</script>{% endblock %}
